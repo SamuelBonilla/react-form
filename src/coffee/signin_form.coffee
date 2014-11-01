@@ -1,19 +1,50 @@
 React = require('react/addons')
 nod = require('nod-validation')
+_ = require('lodash')
+Navigation = require('react-router').Navigation
 
 checks = require('./checks')
+flash = require('./flash')
 InputField = require('./input_field')
+auth = require('./auth')
 
-module.exports = React.createClass
+SigninForm = React.createClass
   displayName: 'SigninForm'
+  mixins: [ Navigation ]
+
+  statics:
+    pendingTransition: null
 
   handleSubmit: (e) ->
     e.preventDefault()
 
-    email = @refs.email.value()
-    password = @refs.password.value()
+    result = {}
+    allValid = true
 
-    console.log email, password
+    for ref in ['email', 'password']
+      field = @refs[ref]
+      field.validate()
+      result[ref] = field.value()
+      allValid = false unless field.isValid()
+
+    if !allValid
+      flash.alert 'Something went wrong!'
+      return
+
+    if _.isEqual(result, email: 'foo@bar.com', password: 'test123')
+      auth.signIn()
+      flash.next.notice 'Signed in successfully!'
+      if (transition = SigninForm.pendingTransition)
+        transition.retry()
+        SigninForm.pendingTransition = null
+      else
+        @transitionTo('home')
+    else
+      flash.alert 'Something went wrong!'
+      @refs.password.setError('invalid credentials!')
+
+  getInitialState: ->
+    invalidPassword: false
 
   render: ->
     <div>
@@ -43,5 +74,11 @@ module.exports = React.createClass
           Submit
         </button>
       </form>
+
+      <p className="space--top-3">
+        Psss.. use <em>foo@bar.com/test123</em> to enter!
+      </p>
     </div>
+
+module.exports = SigninForm
 

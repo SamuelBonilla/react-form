@@ -30,6 +30,9 @@ module.exports = React.createClass
   validate: ->
     @setState(error: @errors()[0])
 
+  setError: (error) ->
+    @setState(error: error)
+
   rawValue: ->
     @refs.input.getDOMNode().value
 
@@ -43,6 +46,4 @@ module.exports = React.createClass
   value: ->
     if @isValid()
       @rawValue()
-    else
-      @validate()
 
