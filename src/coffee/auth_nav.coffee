@@ -1,27 +1,22 @@
 React = require('react/addons')
 Link = require('react-router').Link
-Navigation = require('react-router').Navigation
-auth = require('./auth')
-flash = require('./flash')
+Fluxxor = require('fluxxor')
+
+FluxMixin = Fluxxor.FluxMixin(React),
+StoreWatchMixin = Fluxxor.StoreWatchMixin
 
 module.exports = React.createClass
   displayName: 'AuthNav'
-  mixins: [ Navigation ]
+  mixins: [ FluxMixin, StoreWatchMixin("AuthStore") ]
 
-  getInitialState: ->
-    signedIn: auth.isSignedIn()
-
-  componentWillMount: ->
-    auth.on 'change', =>
-      @setState(signedIn: auth.isSignedIn())
+  getStateFromFlux: ->
+    @getFlux.store("AuthStore").getState()
 
   signOut: ->
-    flash.next.notice 'Signed out successfully!'
-    auth.signOut()
-    @transitionTo('home')
+    @getFlux.actions.signOut()
 
   render: ->
-    if @state.signedIn
+    if @state.isSignedIn
       <ul className="nav">
         <li className="nav__item">Hi Foo!</li>
         <li className="nav__item"><a onClick={@signOut} className="button--alert">Sign out</a></li>

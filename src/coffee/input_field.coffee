@@ -1,5 +1,5 @@
-React = require('react/addons')
 _ = require('lodash')
+React = require('react/addons')
 
 module.exports = React.createClass
   displayName: 'InputField'

@@ -1,17 +1,16 @@
-React = require('react/addons')
 _ = require('lodash')
+React = require('react/addons')
+Fluxxor = require('fluxxor')
 
-flash = require('./flash')
+FluxMixin = Fluxxor.FluxMixin(React),
+StoreWatchMixin = Fluxxor.StoreWatchMixin
 
 module.exports = React.createClass
   displayName: 'FlashMessages'
+  mixins: [ FluxMixin, StoreWatchMixin("FlashStore") ]
 
-  getInitialState: ->
-    messages: {}
-
-  componentWillMount: ->
-    flash.on 'change', (data) =>
-      @setState(messages: data)
+  getStateFromFlux: ->
+    @getFlux.store("FlashStore").getState()
 
   render: ->
     return null if _.size(@state.messages) == 0
