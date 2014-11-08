@@ -1,5 +1,5 @@
 Fluxxor = require('Fluxxor')
-constants = require('./constants')
+constants = require('../constants')
 
 module.exports = Fluxxor.createStore
   initialize: ->
@@ -26,5 +26,5 @@ module.exports = Fluxxor.createStore
     @emit 'change'
 
   getState: ->
-    messages: @messages
+    @messages
 

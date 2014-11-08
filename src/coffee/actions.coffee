@@ -1,6 +1,6 @@
 constants = require('./constants')
 
-module.exports = {
+module.exports =
   setFlash: (messages) ->
     @dispatch(constants.SET_FLASH, messages: messages)
 

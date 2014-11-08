@@ -2,7 +2,7 @@ React = require('react/addons')
 
 auth = require('./auth')
 SigninForm = require('./signin_form')
-flash = require('./flash')
+flash = require('./stores/flash_store')
 
 module.exports = React.createClass
   displayName: 'Private'

@@ -1,8 +1,8 @@
 _ = require('lodash')
 React = require('react/addons')
-Fluxxor = require('fluxxor')
 
-FluxMixin = Fluxxor.FluxMixin(React),
+Fluxxor = require('fluxxor')
+FluxMixin = Fluxxor.FluxMixin(React)
 StoreWatchMixin = Fluxxor.StoreWatchMixin
 
 module.exports = React.createClass
@@ -10,7 +10,7 @@ module.exports = React.createClass
   mixins: [ FluxMixin, StoreWatchMixin("FlashStore") ]
 
   getStateFromFlux: ->
-    @getFlux.store("FlashStore").getState()
+    @getFlux().store("FlashStore").getState()
 
   render: ->
     return null if _.size(@state.messages) == 0

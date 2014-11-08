@@ -1,16 +1,17 @@
 React = require('react/addons')
+
+Fluxxor = require('fluxxor')
+FluxMixin = Fluxxor.FluxMixin(React)
+
 nod = require('nod-validation')
 _ = require('lodash')
-Navigation = require('react-router').Navigation
+checks = require('../checks')
 
-checks = require('./checks')
-flash = require('./flash')
 InputField = require('./input_field')
-auth = require('./auth')
 
 SigninForm = React.createClass
   displayName: 'SigninForm'
-  mixins: [ Navigation ]
+  mixins: [ FluxMixin ]
 
   statics:
     pendingTransition: null
@@ -28,19 +29,20 @@ SigninForm = React.createClass
       allValid = false unless field.isValid()
 
     if !allValid
-      flash.alert 'Something went wrong!'
+      @getFlux().actions.setFlash(alert: 'Something went wrong!')
       return
 
     if _.isEqual(result, email: 'foo@bar.com', password: 'test123')
-      auth.signIn()
-      flash.next.notice 'Signed in successfully!'
-      if (transition = SigninForm.pendingTransition)
-        transition.retry()
-        SigninForm.pendingTransition = null
-      else
-        @transitionTo('home')
+      @getFlux().actions.signIn()
+      @getFlux().actions.setFlash(notice: 'Signed in successfully!')
+      console.log "1"
+      # if (transition = SigninForm.pendingTransition)
+      #   transition.retry()
+      #   SigninForm.pendingTransition = null
+      # else
+      #   @transitionTo('home')
     else
-      flash.alert 'Something went wrong!'
+      @getFlux().actions.setFlash(alert: 'Invalid credentials!')
       @refs.password.setError('invalid credentials!')
 
   getInitialState: ->

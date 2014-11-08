@@ -26,9 +26,11 @@ module.exports = React.createClass
       </div>
       <div className="space--both-3">
         <FlashMessages/>
+
         <div className="wrap">
           <@props.activeRouteHandler />
         </div>
+
       </div>
     </div>
 
